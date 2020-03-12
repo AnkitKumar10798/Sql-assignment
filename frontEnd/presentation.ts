@@ -57,6 +57,7 @@ class Presentation implements CRUD<Employee, number> {
       "phone",
       "Role",
       "Address",
+      "customerName",
       "Edit option",
       "Delete option",
       "Multiple select"
@@ -103,12 +104,17 @@ class Presentation implements CRUD<Employee, number> {
         '<td  class="cell' +
         Emp[c].empid +
         '">' +
-        Role[Emp[c].role] +
+        Emp[c].rolename +
         "</td>" +
         '<td  class="cell' +
         Emp[c].empid +
         '">' +
         Emp[c].address +
+        '<td  class="cell' +
+        Emp[c].empid +
+        '">' +
+        Emp[c].customername +
+        "</td>" +
         "</td>" +
         '<td> <button type="button" class="btn btn-dark"id="edit' +
         Emp[c].empid +
@@ -134,22 +140,56 @@ class Presentation implements CRUD<Employee, number> {
     if (this.flag[row_num] === false) {
       this.objB.SwitchButton(row_num);
       let row_array: any[] = [];
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < 8; i++) {
         if (i === 5) {
           row_array[i] = row_element[i].innerHTML;
         } else {
           row_array[i] = row_element[i].innerHTML;
         }
       }
-      console.log(row_array);
+
       for (let index = 0; index < row_element.length; index++) {
-        if (index === 5) {
-          row_element[index].innerHTML = `<select id = "role">
-            <option value ="0">QA</option>
-            <option value ="1">Development</option>
-            <option value ="2">DevOps</option>
-            <option value ="3">UIDesign</option>
-            </select>`;
+        if (index == 5) {
+          fetch("http://localhost:3000/crud/fetchRoles")
+          .then(val => val.json())
+          .then(res => {
+            let roleSelect = document.createElement("select");
+            roleSelect.setAttribute("id", "role");
+            row_element[index].replaceChild(
+              roleSelect,
+              row_element[index].childNodes[0]
+            );
+            let optionsCount: number = res.length;
+            let option: HTMLOptionElement[] = [];
+            for (let i = 0; i < optionsCount; i++) {
+              option[i] = document.createElement("option");
+              option[i].setAttribute("value", res[i].roleid);
+              let text = document.createTextNode(res[i].rolename);
+              option[i].appendChild(text);
+              roleSelect.appendChild(option[i]);
+            }
+              
+            });
+        } else if (index == 7) {
+          fetch("http://localhost:3000/crud/fetchCustomers")
+            .then(val => val.json())
+            .then(res => {
+              let customerSelect = document.createElement("select");
+              customerSelect.setAttribute("id", "customers");
+              row_element[index].replaceChild(
+                customerSelect,
+                row_element[index].childNodes[0]
+              );
+              let optionsCount: number = res.length;
+              let option: HTMLOptionElement[] = [];
+              for (let i = 0; i < optionsCount; i++) {
+                option[i] = document.createElement("option");
+                option[i].setAttribute("value", res[i].customerid);
+                let text = document.createTextNode(res[i].customername);
+                option[i].appendChild(text);
+                customerSelect.appendChild(option[i]);
+              }
+            });
         } else {
           row_element[
             index
@@ -158,17 +198,24 @@ class Presentation implements CRUD<Employee, number> {
         }
       }
     } else {
+      let select_role: HTMLSelectElement = document.getElementById(
+        "role"
+      )! as HTMLSelectElement;
+      let select_customer: HTMLSelectElement = document.getElementById(
+        "customers"
+      )! as HTMLSelectElement;
       let row_array: any[] = [];
-      for (let i = 0; i < 7; i++) {
-        if (i === 5) {
-          row_array[i] = (row_element[i]
-            .childNodes[0] as HTMLInputElement).value;
-        } else {
-          row_array[i] = (row_element[i]
-            .childNodes[0] as HTMLInputElement).value;
+      for (let i = 0; i < 8; i++) {
+        if (i == 5) {
+          row_array[i] = select_role.options[select_role.selectedIndex].text;
+        } else if (i == 7) {
+          row_array[i] =
+            select_customer.options[select_customer.selectedIndex].text;
         }
+        row_array[i] = (row_element[i].childNodes[0] as HTMLInputElement).value;
       }
 
+      console.log(row_array);
       if (!objValidate.validateEmail(row_array[3])) {
         this.flag[row_num] = false;
         row_element[3].innerHTML +=
@@ -225,15 +272,15 @@ class Presentation implements CRUD<Employee, number> {
         objValidate.validatePhone(`${row_array[4]}`) &&
         objValidate.checkothers(row_array[1])
       ) {
-        this.Record[row_num] = row_array;
         let changeEmployee = new Employee(
-          this.Record[row_num][0],
-          this.Record[row_num][1],
-          this.Record[row_num][2],
-          this.Record[row_num][3],
-          this.Record[row_num][4],
-          +this.Record[row_num][5],
-          this.Record[row_num][6]
+          row_array[0],
+          row_array[1],
+          row_array[2],
+          row_array[3],
+          +row_array[4],
+          row_array[5],
+          row_array[6],
+          row_array[7]
         );
         // changeEmployee.empid = row_num;
         console.log(changeEmployee);
@@ -245,12 +292,13 @@ class Presentation implements CRUD<Employee, number> {
           body: JSON.stringify(changeEmployee)
         }).then(res => {
           this.objB.SwitchButton(row_num);
-          for (let index = 0; index < row_element.length; index++) {
-            if (index === 5) {
+          for (let index = 0; index < 8; index++) {
+            if (index == 5) {
               row_element[index].innerHTML =
-                Role[
-                  +(row_element[index].childNodes[0] as HTMLInputElement).value
-                ];
+                select_role.options[select_role.selectedIndex].text;
+            } else if (index === 7) {
+              row_element[index].innerHTML =
+                select_customer.options[select_customer.selectedIndex].text;
             } else {
               row_element[index].innerHTML = (row_element[index]
                 .childNodes[0] as HTMLInputElement).value;

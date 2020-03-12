@@ -1,8 +1,8 @@
 export enum Role {
-  QA,
-  Development,
   DevOps,
-  UIDesign
+  Developer,
+  QA,
+  uiDesign
 }
 export interface CRUD<T, U> {
   loadAndRefresh(): void;
@@ -17,25 +17,28 @@ export class Employee {
   lastname: string;
   phone: number;
   email: string;
-  role: Role;
+  rolename: Role;
   address: string;
   empid: number;
+  customername: string;
   constructor(
     fname: string,
     mname: string,
     lname: string,
     email: string,
     phone: number,
-    role: Role,
-    address: string
+    rolename: Role,
+    address: string,
+    customername: string
   ) {
     this.firstname = fname;
     this.middlename = mname;
     this.lastname = lname;
     this.email = email;
     this.phone = phone;
-    this.role = role;
+    this.rolename = rolename;
     this.address = address;
+    this.customername = customername;
   }
 }
 
@@ -43,6 +46,7 @@ export class operations implements CRUD<Employee, number> {
   async loadAndRefresh() {
     let response = await fetch("http://localhost:3000/crud/fetch");
     let data = await response.json();
+    console.log(data);
 
     return data;
   }

@@ -9,20 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 export var Role;
 (function (Role) {
-    Role[Role["QA"] = 0] = "QA";
-    Role[Role["Development"] = 1] = "Development";
-    Role[Role["DevOps"] = 2] = "DevOps";
-    Role[Role["UIDesign"] = 3] = "UIDesign";
+    Role[Role["DevOps"] = 0] = "DevOps";
+    Role[Role["Developer"] = 1] = "Developer";
+    Role[Role["QA"] = 2] = "QA";
+    Role[Role["uiDesign"] = 3] = "uiDesign";
 })(Role || (Role = {}));
 export class Employee {
-    constructor(fname, mname, lname, email, phone, role, address) {
+    constructor(fname, mname, lname, email, phone, rolename, address, customername) {
         this.firstname = fname;
         this.middlename = mname;
         this.lastname = lname;
         this.email = email;
         this.phone = phone;
-        this.role = role;
+        this.rolename = rolename;
         this.address = address;
+        this.customername = customername;
     }
 }
 export class operations {
@@ -30,6 +31,7 @@ export class operations {
         return __awaiter(this, void 0, void 0, function* () {
             let response = yield fetch("http://localhost:3000/crud/fetch");
             let data = yield response.json();
+            console.log(data);
             return data;
         });
     }

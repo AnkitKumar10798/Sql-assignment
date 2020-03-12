@@ -1,7 +1,8 @@
 import { objp } from "./presentation.js";
-import { Employee } from "./businessLogic.js";
 export class NewEntry {
     MakeFormVisible() {
+        this.createCustomerDropDown();
+        this.createRoleDropDown();
         let formdiv = document.getElementById("Inputform");
         formdiv.style.visibility = "visible";
         let submitbutton = document.getElementById("submit");
@@ -9,22 +10,71 @@ export class NewEntry {
             this.NewEntry();
         };
     }
+    createRoleDropDown() {
+        let roleSelect = document.getElementById("role1");
+        fetch("http://localhost:3000/crud/fetchRoles")
+            .then(val => val.json())
+            .then(res => {
+            let optionsCount = res.length;
+            let option = [];
+            for (let i = 0; i < optionsCount; i++) {
+                option[i] = document.createElement("option");
+                option[i].setAttribute("value", res[i].roleid);
+                let text = document.createTextNode(res[i].rolename);
+                option[i].appendChild(text);
+                roleSelect.appendChild(option[i]);
+            }
+        });
+    }
+    createCustomerDropDown() {
+        let customerSelect = document.getElementById("customer1");
+        let roleSelect = document.getElementById("role1");
+        fetch("http://localhost:3000/crud/fetchCustomers")
+            .then(val => val.json())
+            .then(res => {
+            let optionsCount = res.length;
+            let option = [];
+            for (let i = 0; i < optionsCount; i++) {
+                option[i] = document.createElement("option");
+                option[i].setAttribute("value", res[i].customerid);
+                let text = document.createTextNode(res[i].customername);
+                option[i].appendChild(text);
+                customerSelect.appendChild(option[i]);
+            }
+        });
+    }
     NewEntry() {
+        let customerSelect = document.getElementById("customer1");
+        let roleSelect = document.getElementById("role1");
         let tbody = document.getElementsByTagName("tbody")[0];
         let newflag = false;
         objp.flag.push(newflag);
         let newRow = document.createElement("tr");
         newRow.style.textAlign = "center";
         tbody.appendChild(newRow);
-        let fname = document.getElementById("fname").value;
-        let mname = document.getElementById("mname").value;
-        let lname = document.getElementById("lname").value;
+        let firstname = document.getElementById("fname")
+            .value;
+        let middlename = document.getElementById("mname")
+            .value;
+        let lastname = document.getElementById("lname")
+            .value;
         let email = document.getElementById("email").value;
-        let phone = document.getElementById("ph").value;
-        let roleVal = parseInt(document.getElementById("role1").value);
+        let phone = parseInt(document.getElementById("ph").value);
+        let roleid = parseInt(document.getElementById("role1").value);
+        let customerid = parseInt(document.getElementById("role1").value);
         let address = document.getElementById("addr").value;
-        let objE = new Employee(fname, mname, lname, email, parseInt(phone), roleVal, address);
-        // objE.empid = row_Count;
+        let customername = customerSelect.options[customerSelect.selectedIndex].text;
+        let rolename = roleSelect.options[roleSelect.selectedIndex].text;
+        let objE = {
+            firstname,
+            middlename,
+            lastname,
+            email,
+            phone,
+            roleid,
+            address,
+            customerid
+        };
         fetch(`http://localhost:3000/crud/createnew`, {
             method: "POST",
             headers: {
@@ -67,13 +117,18 @@ export class NewEntry {
                     '<td class = "cell' +
                     obj.empid +
                     '">' +
-                    objE.role +
+                    rolename +
                     "</td>" +
                     '<td class = "cell' +
                     obj.empid +
                     '"><' +
                     objE.address +
                     "/td>" +
+                    '<td  class="cell' +
+                    obj.empid +
+                    '">' +
+                    customername +
+                    "</td>" +
                     '<td><button type="button" class="btn btn-dark"id="edit' +
                     obj.empid +
                     '"> edit </button></td>' +
