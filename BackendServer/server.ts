@@ -19,3 +19,5 @@ app.get("/crud/fetch", Db.getUser);
 app.delete("/crud/delete/:id", Db.deleteUser);
 app.put("/crud/edit/:id", Db.updateUser);
 app.post("/crud/createnew", Db.newUser);
+app.get("/crud/fetchCustomers", Db.sendCustomer);
+app.get("/crud/fetchRoles",Db.sendRoles);
