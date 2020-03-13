@@ -86,7 +86,6 @@ export class NewEntry {
             return res.json();
         })
             .then(obj => {
-            console.log(obj);
             newRow.setAttribute("id", obj[0].empid.toString());
             newRow.innerHTML =
                 '<td class = "cell' +
@@ -144,7 +143,6 @@ export class NewEntry {
             editButton.onclick = () => {
                 objp.editData(obj.empid);
             };
-            //add delete button --------------------------
             let deleteButton = document.getElementById(iddelete);
             deleteButton.onclick = () => {
                 objp.deleteData(obj.empid);

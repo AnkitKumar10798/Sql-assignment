@@ -21,7 +21,6 @@ class Presentation implements CRUD<Employee, number> {
       this.create(response);
     });
   }
-  //-------------------------------------------------------------------
   constructor() {
     document.getElementById("Inputform")!.style.visibility = "hidden";
     let button = document.getElementById("LOAD");
@@ -37,10 +36,9 @@ class Presentation implements CRUD<Employee, number> {
     objp.callBuisnessLogic();
   }
   create(Emp: Employee[]) {
-    //destructing---------------------------------------------------------
+    //destructuring---------------------------------------------------------
     this.datalen = Emp.length;
     this.Record = Emp.map(obj => Object.values(obj));
-    console.log(this.Record);
     for (let i = 0; i < this.datalen; i++) {
       this.flag[Emp[i].empid] = false;
     }
@@ -151,24 +149,23 @@ class Presentation implements CRUD<Employee, number> {
       for (let index = 0; index < row_element.length; index++) {
         if (index == 5) {
           fetch("http://localhost:3000/crud/fetchRoles")
-          .then(val => val.json())
-          .then(res => {
-            let roleSelect = document.createElement("select");
-            roleSelect.setAttribute("id", "role");
-            row_element[index].replaceChild(
-              roleSelect,
-              row_element[index].childNodes[0]
-            );
-            let optionsCount: number = res.length;
-            let option: HTMLOptionElement[] = [];
-            for (let i = 0; i < optionsCount; i++) {
-              option[i] = document.createElement("option");
-              option[i].setAttribute("value", res[i].roleid);
-              let text = document.createTextNode(res[i].rolename);
-              option[i].appendChild(text);
-              roleSelect.appendChild(option[i]);
-            }
-              
+            .then(val => val.json())
+            .then(res => {
+              let roleSelect = document.createElement("select");
+              roleSelect.setAttribute("id", "role");
+              row_element[index].replaceChild(
+                roleSelect,
+                row_element[index].childNodes[0]
+              );
+              let optionsCount: number = res.length;
+              let option: HTMLOptionElement[] = [];
+              for (let i = 0; i < optionsCount; i++) {
+                option[i] = document.createElement("option");
+                option[i].setAttribute("value", res[i].roleid);
+                let text = document.createTextNode(res[i].rolename);
+                option[i].appendChild(text);
+                roleSelect.appendChild(option[i]);
+              }
             });
         } else if (index == 7) {
           fetch("http://localhost:3000/crud/fetchCustomers")
@@ -214,8 +211,6 @@ class Presentation implements CRUD<Employee, number> {
         }
         row_array[i] = (row_element[i].childNodes[0] as HTMLInputElement).value;
       }
-
-      console.log(row_array);
       if (!objValidate.validateEmail(row_array[3])) {
         this.flag[row_num] = false;
         row_element[3].innerHTML +=
@@ -282,8 +277,6 @@ class Presentation implements CRUD<Employee, number> {
           row_array[6],
           row_array[7]
         );
-        // changeEmployee.empid = row_num;
-        console.log(changeEmployee);
         fetch(`http://localhost:3000/crud/edit/${row_num}`, {
           method: "PUT",
           headers: {
@@ -295,13 +288,13 @@ class Presentation implements CRUD<Employee, number> {
           for (let index = 0; index < 8; index++) {
             if (index == 5) {
               row_element[index].innerHTML =
-                select_role.options[select_role.selectedIndex].text;
-            } else if (index === 7) {
-              row_element[index].innerHTML =
-                select_customer.options[select_customer.selectedIndex].text;
-            } else {
-              row_element[index].innerHTML = (row_element[index]
-                .childNodes[0] as HTMLInputElement).value;
+              select_role.options[select_role.selectedIndex].text;
+          } else if (index === 7) {
+            row_element[index].innerHTML =
+              select_customer.options[select_customer.selectedIndex].text;
+          } else {
+            row_element[index].innerHTML = (row_element[index]
+              .childNodes[0] as HTMLInputElement).value;
             }
           }
         });
@@ -319,9 +312,7 @@ class Presentation implements CRUD<Employee, number> {
         .childNodes[0] as HTMLInputElement).value;
     }
 
-    console.log(this.flag[row_num]);
     if (this.flag[row_num] === false) {
-      console.log("calling the delete api ");
       fetch(`http://localhost:3000/crud/delete/${row_num}`, {
         method: "DELETE"
       }).then(res => {
@@ -331,7 +322,6 @@ class Presentation implements CRUD<Employee, number> {
         )! as HTMLTableElement).rows.length;
       });
     } else {
-      console.log(row_array);
       for (let i = 0; i < 7; i++) {
         if (i === 5) {
           let check: string = typeof row_array[i];

@@ -5,7 +5,6 @@ import { ButtonOperations } from "./buttonoperations.js";
 import { NewEntry } from "./newEntry.js";
 import { objValidate } from "./validation.js";
 class Presentation {
-    //-------------------------------------------------------------------
     constructor() {
         this.flag = [];
         //object as attribute------------------------------------------------
@@ -32,10 +31,9 @@ class Presentation {
         objp.callBuisnessLogic();
     }
     create(Emp) {
-        //destructing---------------------------------------------------------
+        //destructuring---------------------------------------------------------
         this.datalen = Emp.length;
         this.Record = Emp.map(obj => Object.values(obj));
-        console.log(this.Record);
         for (let i = 0; i < this.datalen; i++) {
             this.flag[Emp[i].empid] = false;
         }
@@ -199,7 +197,6 @@ class Presentation {
                 }
                 row_array[i] = row_element[i].childNodes[0].value;
             }
-            console.log(row_array);
             if (!objValidate.validateEmail(row_array[3])) {
                 this.flag[row_num] = false;
                 row_element[3].innerHTML +=
@@ -254,8 +251,6 @@ class Presentation {
                 objValidate.validatePhone(`${row_array[4]}`) &&
                 objValidate.checkothers(row_array[1])) {
                 let changeEmployee = new Employee(row_array[0], row_array[1], row_array[2], row_array[3], +row_array[4], row_array[5], row_array[6], row_array[7]);
-                // changeEmployee.empid = row_num;
-                console.log(changeEmployee);
                 fetch(`http://localhost:3000/crud/edit/${row_num}`, {
                     method: "PUT",
                     headers: {
@@ -290,9 +285,7 @@ class Presentation {
             row_array[index] = row.cells[index]
                 .childNodes[0].value;
         }
-        console.log(this.flag[row_num]);
         if (this.flag[row_num] === false) {
-            console.log("calling the delete api ");
             fetch(`http://localhost:3000/crud/delete/${row_num}`, {
                 method: "DELETE"
             }).then(res => {
@@ -301,7 +294,6 @@ class Presentation {
             });
         }
         else {
-            console.log(row_array);
             for (let i = 0; i < 7; i++) {
                 if (i === 5) {
                     let check = typeof row_array[i];
