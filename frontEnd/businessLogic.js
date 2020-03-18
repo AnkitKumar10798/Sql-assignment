@@ -24,6 +24,7 @@ export class Employee {
         this.rolename = rolename;
         this.address = address;
         this.customername = customername;
+        
     }
 }
 export class operations {
