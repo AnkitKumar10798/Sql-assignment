@@ -1,4 +1,3 @@
-
 CREATE TABLE Users
 (
     empid BIGSERIAL PRIMARY KEY,
