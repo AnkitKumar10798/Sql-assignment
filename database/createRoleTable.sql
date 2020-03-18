@@ -1,0 +1,8 @@
+CREATE TABLE Roles
+(
+    roleId BIGSERIAL PRIMARY KEY,
+    rolename VARCHAR(25) NOT NULL,
+    Description VARCHAR(30) NOT NULL,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_on TIMESTAMP
+);
